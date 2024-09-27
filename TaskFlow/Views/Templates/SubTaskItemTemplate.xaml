@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="TaskFlow.Views.Templates.SubTaskItemTemplate"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:TaskFlowModels.Models;assembly=TaskFlowModels"
+    xmlns:viewmodel="clr-namespace:TaskFlow.ViewModels"
+    x:DataType="models:SubTaskItem">
+
+    <ContentView.Content>
+        <Grid Padding="10" BackgroundColor="White">
+            <HorizontalStackLayout Spacing="10">
+                <CheckBox
+                    Margin="-5,-20"
+                    IsChecked="{Binding Completed}"
+                    Scale="0.8"
+                    Color="DarkGray">
+                    <CheckBox.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=CompleteSubTaskCommand}" CommandParameter="{Binding .}" />
+                    </CheckBox.GestureRecognizers>
+                </CheckBox>
+                <Label
+                    FontSize="14"
+                    Text="{Binding Description}"
+                    VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </Grid>
+    </ContentView.Content>
+</ContentView>

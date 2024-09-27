@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="TaskFlow.Views.Templates.CompletedTaskItemTemplate"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:TaskFlowModels.Models;assembly=TaskFlowModels"
+    xmlns:viewmodel="clr-namespace:TaskFlow.ViewModels"
+    x:DataType="models:TaskItem">
+
+    <ContentView.Content>
+        <VerticalStackLayout Margin="0,2">
+            <Frame BackgroundColor="#d1d1d1" Style="{StaticResource FrameLabelStyle}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=SelectTaskItemCommand}" CommandParameter="{Binding .}" />
+                </Frame.GestureRecognizers>
+                <Frame.Shadow>
+                    <Shadow
+                        Brush="{AppThemeBinding Light={StaticResource White},
+                                                Dark={StaticResource Black}}"
+                        Opacity="0.8"
+                        Offset="6,10" />
+                </Frame.Shadow>
+                <HorizontalStackLayout Padding="5,10" Spacing="10">
+                    <CheckBox
+                        Margin="-5,-20"
+                        IsChecked="{Binding IsCompleted}"
+                        Scale="0.8"
+                        Color="Grey">
+                        <CheckBox.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ToggleCompleteTaskCommand}" CommandParameter="{Binding .}" />
+                        </CheckBox.GestureRecognizers>
+                    </CheckBox>
+
+                    <Label
+                        FontSize="14"
+                        Text="{Binding Description}"
+                        TextColor="#707070"
+                        VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup Name="CommonStates">
+                        <VisualState Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="White" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#ececec" />
+                                <Setter Property="BorderColor" Value="#ececec" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Frame>
+        </VerticalStackLayout>
+    </ContentView.Content>
+</ContentView>

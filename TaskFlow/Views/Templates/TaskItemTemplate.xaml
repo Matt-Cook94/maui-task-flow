@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="TaskFlow.Views.Templates.TaskItemTemplate"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:TaskFlow.Converters"
+    xmlns:models="clr-namespace:TaskFlowModels.Models;assembly=TaskFlowModels"
+    xmlns:viewmodel="clr-namespace:TaskFlow.ViewModels"
+    x:DataType="models:TaskItem">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <converters:StarImageConverter x:Key="StarImageConverter" />
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <VerticalStackLayout Margin="0,2">
+            <Frame Style="{StaticResource FrameLabelStyle}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=SelectTaskItemCommand}" CommandParameter="{Binding .}" />
+                </Frame.GestureRecognizers>
+
+                <Grid RowSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0*" />
+                    </Grid.ColumnDefinitions>
+
+                    <HorizontalStackLayout Padding="5,10">
+
+                        <CheckBox
+                            Margin="-5,-20"
+                            IsChecked="{Binding IsCompleted}"
+                            Scale="0.8"
+                            Color="Grey">
+                            <CheckBox.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ToggleCompleteTaskCommand}" CommandParameter="{Binding .}" />
+                            </CheckBox.GestureRecognizers>
+                        </CheckBox>
+
+                        <Label
+                            FontSize="14"
+                            Text="{Binding Description}"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout
+                        Margin="10,0"
+                        HorizontalOptions="End"
+                        Spacing="15">
+                        <Image
+                            HeightRequest="18"
+                            HorizontalOptions="End"
+                            Source="{Binding IsStarred, Converter={StaticResource StarImageConverter}}">
+
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ToggleStarCommand}" CommandParameter="{Binding .}" />
+                            </Image.GestureRecognizers>
+
+                        </Image>
+
+                    </HorizontalStackLayout>
+                </Grid>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup Name="CommonStates">
+                        <VisualState Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="White" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#ececec" />
+                                <Setter Property="BorderColor" Value="#ececec" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ContentView.Content>
+</ContentView>

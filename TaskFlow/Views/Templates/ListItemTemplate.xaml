@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="TaskFlow.Views.Templates.ListItemTemplate"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:TaskFlowModels.Models;assembly=TaskFlowModels"
+    xmlns:viewmodel="clr-namespace:TaskFlow.ViewModels"
+    x:DataType="models:ListItem">
+
+    <ContentView.Resources>
+        <ResourceDictionary />
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <Grid Padding="10,7">
+            <Grid>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=SelectListItemCommand}" CommandParameter="{Binding .}" />
+                </Grid.GestureRecognizers>
+                <Label
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    Text="{Binding Name}"
+                    VerticalOptions="Center" />
+            </Grid>
+        </Grid>
+    </ContentView.Content>
+</ContentView>

@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TaskFlow.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:TaskFlow.Controls"
+    xmlns:converters="clr-namespace:TaskFlow.Converters"
+    xmlns:models="clr-namespace:TaskFlowSqlite.Models;assembly=TaskFlowSqlite"
+    xmlns:resources="clr-namespace:TaskFlow.Resources"
+    xmlns:templates="clr-namespace:TaskFlow.Views.Templates"
+    xmlns:viewmodel="clr-namespace:TaskFlow.ViewModels"
+    x:DataType="viewmodel:MainViewModel"
+    BackgroundColor="silver">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <converters:StarImageConverter x:Key="StarImageConverter" />
+
+            <Style x:Key="EntryStyle" TargetType="controls:BorderlessEntry">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="BorderLine" TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="LightGray" />
+            </Style>
+
+            <Style x:Key="AddButtonImageStyle" TargetType="Image">
+                <Setter Property="HeightRequest" Value="15" />
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid
+        ColumnDefinitions=".15*, .55*, .25*"
+        RowDefinitions=".08*, Auto, *"
+        RowSpacing="0">
+
+        <!--  HEADER  -->
+        <BoxView
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            BackgroundColor="{StaticResource PrimaryHeaderColor}" />
+        <HorizontalStackLayout
+            Grid.Column="1"
+            Padding="20,0"
+            HorizontalOptions="Start">
+            <Label
+                FontSize="20"
+                Text="{Binding CurrentListItem.Name}"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+
+        <!--  COLUMN 0 - LEFT TAB  -->
+        <VerticalStackLayout
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            BackgroundColor="{StaticResource TabPrimaryColor}">
+            <CollectionView ItemsSource="{Binding ListItems}" SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <templates:ListItemTemplate />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout
+            Grid.Row="2"
+            Padding="10"
+            VerticalOptions="End">
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddListItemCommand}" />
+                </HorizontalStackLayout.GestureRecognizers>
+                <Label Text="Create List" VerticalTextAlignment="Center">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="TextColor" Value="Black" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="TextColor" Value="DarkGray" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <VisualState x:Name="MouseDown">
+                                    <VisualState.Setters>
+                                        <Setter Property="TextColor" Value="Green" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Label>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+
+        <!--  COLUMN 1 - MAIN CONTAINER  -->
+        <VerticalStackLayout
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            Grid.Column="1"
+            BackgroundColor="{StaticResource PrimaryContainerColor}">
+            <Grid Padding="10">
+
+                <Entry
+                    Margin="20,0"
+                    BackgroundColor="{StaticResource PrimaryContainerSecondaryColor}"
+                    HorizontalOptions="FillAndExpand"
+                    Placeholder="Add a task..."
+                    PlaceholderColor="White"
+                    ReturnCommand="{Binding AddTaskCommand}"
+                    Style="{StaticResource EntryStyle}"
+                    Text="{Binding TaskText}"
+                    TextColor="White" />
+                <Image
+                    Margin="35,0"
+                    Source="add.png"
+                    Style="{StaticResource AddButtonImageStyle}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddTaskCommand}" />
+                    </Image.GestureRecognizers>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="Source" Value="add_hover.png" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="Source" Value="add.png" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Image>
+
+            </Grid>
+
+            <!--  Task Items  -->
+            <CollectionView
+                Margin="10,0"
+                ItemsSource="{Binding Tasks}"
+                SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:TaskItem">
+                        <templates:TaskItemTemplate />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label
+                Margin="10,5"
+                Padding="5,0"
+                BackgroundColor="{StaticResource PrimaryContainerSecondaryColor}"
+                HorizontalOptions="Start"
+                Text="{Binding CompletedTasks.Count, StringFormat='{0} COMPLETED TASKS'}"
+                TextColor="White">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ShowCompletedTasksCommand}" />
+                </Label.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="DarkGrey" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="White" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Label>
+            <CollectionView
+                Margin="10,0"
+                IsVisible="{Binding ShowCompletedTaskList}"
+                ItemsSource="{Binding CompletedTasks}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:TaskItem">
+                        <templates:CompletedTaskItemTemplate />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+
+        <!--  COLUMN 2 - RIGHT SIDE TAB  -->
+        <BoxView
+            Grid.RowSpan="3"
+            Grid.Column="2"
+            BackgroundColor="{StaticResource TabSecondaryColor}" />
+        <Grid
+            Grid.RowSpan="3"
+            Grid.Column="3"
+            IsVisible="{Binding TaskSelected}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="45" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="10,0,0,0"
+                IsChecked="{Binding SelectedTaskItem.IsCompleted}"
+                Scale="0.8"
+                Color="Grey">
+                <CheckBox.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ToggleCompleteTaskCommand}" CommandParameter="{Binding SelectedTaskItem}" />
+                </CheckBox.GestureRecognizers>
+            </CheckBox>
+
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                Padding="0"
+                FontSize="22"
+                HorizontalOptions="Center"
+                Text="{Binding SelectedTaskItem.Description}"
+                VerticalOptions="Center" />
+
+            <Image
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="10"
+                HeightRequest="18"
+                HorizontalOptions="End"
+                Source="{Binding SelectedTaskItem.IsStarred, Converter={StaticResource StarImageConverter}}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ToggleStarCommand}" CommandParameter="{Binding SelectedTaskItem}" />
+                </Image.GestureRecognizers>
+            </Image>
+
+            <BoxView
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Style="{StaticResource BorderLine}" />
+
+            <BoxView
+                Grid.Row="1"
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Color="{StaticResource TabPrimaryColor}" />
+
+            <Entry
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="20,10"
+                BackgroundColor="White"
+                Placeholder="Add a subtask..."
+                PlaceholderColor="Black"
+                ReturnCommand="{Binding AddSubTaskCommand}"
+                Style="{StaticResource EntryStyle}"
+                Text="{Binding SubTaskText}"
+                TextColor="Black" />
+            <Image
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="-10,0"
+                Source="add_hover.png"
+                Style="{StaticResource AddButtonImageStyle}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddSubTaskCommand}" />
+                </Image.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Source" Value="add.png" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Source" Value="add_hover.png" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Image>
+
+            <VerticalStackLayout
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3">
+
+                <CollectionView ItemsSource="{Binding SubTasks}" SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SubTaskItem">
+                            <templates:SubTaskItemTemplate />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <BoxView
+                Grid.Row="3"
+                Grid.ColumnSpan="3"
+                BackgroundColor="White" />
+            <BoxView
+                Grid.Row="3"
+                Grid.ColumnSpan="3"
+                Style="{StaticResource BorderLine}"
+                VerticalOptions="Start" />
+
+            <Label
+                Grid.Row="3"
+                Grid.Column="0"
+                Padding="10"
+                FontFamily="FontAwesomeRegular"
+                FontSize="15"
+                HorizontalOptions="Start"
+                Text="{x:Static resources:RegularIcons.CircleRight}"
+                VerticalOptions="Center" />
+
+            <Label
+                Grid.Row="3"
+                Grid.Column="1"
+                FontSize="14"
+                HorizontalOptions="Center"
+                Text="{Binding SelectedTaskItem.CreatedDate, StringFormat='{0:D}'}"
+                TextColor="DarkGray"
+                VerticalOptions="Center" />
+
+            <Label
+                Grid.Row="3"
+                Grid.Column="2"
+                Padding="10"
+                FontFamily="FontAwesomeRegular"
+                FontSize="15"
+                HorizontalOptions="End"
+                Text="{x:Static resources:RegularIcons.TrashCan}"
+                TextColor="DarkGray"
+                VerticalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=DeleteTaskCommand}" CommandParameter="{Binding SelectedTaskItem}" />
+                </Label.GestureRecognizers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="DarkGrey" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="Black" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Label>
+        </Grid>
+    </Grid>
+
+</ContentPage>

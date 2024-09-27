@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application
+    x:Class="TaskFlow.App"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TaskFlow">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--  STYLES  -->
+            <Style x:Key="FrameLabelStyle" TargetType="Frame">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="BorderColor" Value="{StaticResource White}" />
+            </Style>
+
+            <!--  COLOURS  -->
+            <Color x:Key="PrimaryHeaderColor">#4f5c79</Color>
+            <Color x:Key="TabPrimaryColor">#f5f5f5</Color>
+            <Color x:Key="TabSecondaryColor">White</Color>
+            <Color x:Key="PrimaryContainerColor">#445068</Color>
+            <Color x:Key="PrimaryContainerSecondaryColor">#4f5c79</Color>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
